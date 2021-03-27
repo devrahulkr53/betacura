@@ -3,12 +3,26 @@ import { useForm } from "react-hook-form";
 
 export default function EmployeeDetails(props){
     const { values, setValues, handleStep, family, setFamily } = props
-    const { register, handleSubmit, watch, errors } = useForm();
+    const { register, handleSubmit, watch, errors } = useForm({
+      defaultValues:{
+        name1:values.employeeDetails[0]?.name,
+        id:values.employeeDetails[0]?.id,
+        idprooftype:values.employeeDetails[0]?.idprooftype,
+        idproof:values.employeeDetails[0]?.idproof,
+        phone1:values.employeeDetails[0]?.phone,
+        email1:values.employeeDetails[0]?.email,
+        name2:values.employeeDetails[1]?.name,
+        gender:values.employeeDetails[1]?.gender,
+        age:values.employeeDetails[1]?.age,
+        email2:values.employeeDetails[1]?.email,
+        phone2:values.employeeDetails[1]?.phone,
+      }
+    });
 
     const [idproof,setIdproof] = React.useState("")
 
     const onSubmit = (data) => { 
-      var emp1 = {name:data.name1,id:data.id,idprooftype:data.idprooftype,idproof:data.idproof[0],phone:data.phone1,email:data.email1}
+      var emp1 = {name:data.name1,id:data.id,idprooftype:data.idprooftype,idproof:data.idproof,phone:data.phone1,email:data.email1}
       var emp2 = {name:data.name2,gender:data.gender,age:data.age,phone:data.phone2,email:data.email2}
       setValues({...values,employeeDetails:family?[emp1,emp2]:[emp1]})
       handleStep();
@@ -43,8 +57,8 @@ export default function EmployeeDetails(props){
 
           {idproof?<>
             <div className="col-md-4">
-              <div className="py-2 text-dark font-medium">{idproof}</div>
-              <input type="file"  name="idproof" ref={register({required:true})} 
+              <div className="py-2 text-dark font-medium">{idproof}*</div>
+              <input type="file"  accept="image/*,.pdf" name="idproof" ref={register({required:true})} 
               className="border p-2 w-full" placeholder={idproof} />
               {errors.idproof && <small className="text-danger">{idproof} is required</small>}
             </div>

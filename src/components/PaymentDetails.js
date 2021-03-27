@@ -19,7 +19,7 @@ export default function PaymentDetails (props) {
 
       <div className="mx-auto flex items-center py-1">
         <div className="w-3/6 md:w-4/6">{values.packageDetails[0].packageName}</div>
-        <div className="text-dark font-medium w-1/6"> 1 </div>
+        <div className="text-dark font-medium w-1/6"> {values.packageDetails[0].count} </div>
         <div className="text-right text-dark font-medium w-2/6 md:w-1/6"> {values.packageDetails[0].pkgprice} </div> 
       </div> 
 
@@ -31,7 +31,7 @@ export default function PaymentDetails (props) {
       <div className="mx-auto flex items-center">
         <div className="w-3/6 md:w-4/6">Add on tests</div>
         <div className="w-1/6">{values.packageDetails[0].addons.length}</div>
-        <div className="text-right w-2/6 md:w-1/6">Rs. {values.packageDetails[0].price}</div> 
+        <div className="text-right w-2/6 md:w-1/6">Rs. {values.packageDetails[0].addonprice}</div> 
       </div> 
       <hr className="my-2" /> 
 
@@ -46,7 +46,7 @@ export default function PaymentDetails (props) {
 
       <div className="mx-auto flex items-center py-1">
         <div className="w-3/6 md:w-4/6">{values.packageDetails[1].packageName}</div>
-        <div className="text-dark font-medium w-1/6">1</div>
+        <div className="text-dark font-medium w-1/6">{values.packageDetails[1].count}</div>
         <div className="text-right text-dark font-medium w-2/6 md:w-1/6"> {values.packageDetails[1].pkgprice} </div> 
       </div> 
 
@@ -58,7 +58,7 @@ export default function PaymentDetails (props) {
       <div className="mx-auto flex items-center">
         <div className="w-3/6 md:w-4/6">Add on tests</div>
         <div className="w-1/6">{values.packageDetails[1].addons.length}</div>
-        <div className="text-right w-2/6 md:w-1/6">Rs. {values.packageDetails[1].price}</div> 
+        <div className="text-right w-2/6 md:w-1/6">Rs. {values.packageDetails[1].addonprice}</div> 
       </div> 
       <hr className="my-2" />
       </>:<></>}
@@ -74,7 +74,7 @@ export default function PaymentDetails (props) {
         <div className="text-dark font-medium w-3/6 md:w-4/6">Total</div>
         <div className="text-dark font-medium w-1/6"></div>
         <div className="text-right text-dark font-medium w-2/6 md:w-1/6">
-          Rs. {family? (values.packageDetails[0].price + values.packageDetails[0].pkgprice + values.packageDetails[1].price + values.packageDetails[1].pkgprice + hcc) : (values.packageDetails[0].price+values.packageDetails[0].pkgprice + hcc)}
+          Rs. {family? (values.packageDetails[0].price + values.packageDetails[1].price + hcc) : (values.packageDetails[0].price + hcc)}
           </div> 
       </div> 
         
@@ -85,7 +85,7 @@ export default function PaymentDetails (props) {
   <div className="p-4 flex justify-between border bg-primary-200 shadow-sm">
     <div>
       <div className="fond-bold display-6">
-        Total Rs. {family? (values.packageDetails[0].price + values.packageDetails[0].pkgprice + values.packageDetails[1].price + values.packageDetails[1].pkgprice + hcc) : (values.packageDetails[0].price+values.packageDetails[0].pkgprice + hcc)}
+        Total Rs. {family? (values.packageDetails[0].price + values.packageDetails[1].price + hcc) : (values.packageDetails[0].price + hcc)}
       </div>
       <div><a className="text-primary cursor-pointer">Pay online here</a></div>
     </div>

@@ -33,6 +33,7 @@ function App() {
     for(var i in values.packageDetails){
       totalPrice += values.packageDetails[i].price
     }
+    totalPrice += 250
     var pkg = values.employeeDetails.map((el,key)=>{
       return {
         name:el.name,
@@ -89,8 +90,10 @@ function App() {
       <div className="container-fluid">
         
         {step > 4?<div className="py-10" style={{height:500}}>
-          <div className="text-center display-6">Thank you for placing your order.</div>
-          <div className="text-center text-secondary text-3xl">Someone from our team will get back to you shortly.</div>
+          <div className="text-center display-6">Thank you for choosing your Wellness Health Screening and placing your request with us.</div>
+          <div className="text-center text-secondary text-3xl">Your case will be allocated to dedicated case manager and 
+          you will be contacted within 24 working hours. Please inbox us at <a className="text-primary" href="http://contact@betacura.com">contact@betacura.com </a>   
+          if you have any questions. You can explore more about us by hitting on <a className="text-primary" href="http://www.betacura.com">www.betacura.com</a> </div>
           <div onClick={()=>window.location.reload()} className="px-4 p-1 border shadow-sm rounded text-center col-md-2 mx-auto my-3 text-primary">START Again</div>
         </div>:<>
         
@@ -105,16 +108,22 @@ function App() {
                     <div>Employee Details</div>  
                     <img src={check} width="20px" className="mx-3" />
                   </div> 
-                  {values.employeeDetails.map((el,key)=>(
+                  <div className="text-md text-secondary">{values.employeeDetails[0].name} +91{values.employeeDetails[0].phone}</div> 
+                  {family?<>
+                    <div>Family Details</div>  
+                    <div className="text-md text-secondary">{values.employeeDetails[1]?.name} +91{values.employeeDetails[1]?.phone}</div> 
+                  </>:<></>}
+                  {/* {values.employeeDetails.map((el,key)=>(
                     <div key={key} className="text-md text-secondary">{el.name} +91{el.phone}</div> 
-                  ))}
+                  ))} */}
                 </div> 
 
               </div>
               <div className="ml-auto self-center w-1/2 md:w-1/5">
-                <div onClick={()=>{setValues({...values,employeeDetails:[],packageDetails:[],appointmentDetails:[]});setStep(1)}} className="text-center p-2 border text-primary rounded mx-3">CHANGE</div>
+                <div onClick={()=>{setStep(1)}} className="text-center p-2 border text-primary rounded mx-3">CHANGE</div>
               </div>
             </div> 
+            {step === 1?<EmployeeDetails {...props} />:<></>}
           </div>
         
         </>:<>
@@ -152,16 +161,17 @@ function App() {
                     {values.packageDetails.map((el,key)=>(
                       <> 
                         <div key={key} className="text-dark text-sm">Package: {el.packageName}</div> 
-                        <div className="text-dark text-sm">Add-on Package: {el.addons.map(el=>(el+","))}</div> 
+                        <div className="text-dark text-sm">Add-on Package: {el.addons?.map(el=>(el+","))}</div> 
                       </>
                     ))}
                   </>}
                 </div> 
               </div>
               <div className="ml-auto self-center w-1/2 md:w-1/5">
-                <div onClick={()=>{setValues({...values,packageDetails:[],appointmentDetails:[]});setStep(2)}} className="text-center p-2 border text-primary rounded mx-3">CHANGE</div>
+                <div onClick={()=>{setStep(2)}} className="text-center p-2 border text-primary rounded mx-3">CHANGE</div>
               </div>
             </div> 
+            {step === 2?<PackageDetails {...props} />:<></>}
           </div>
         
         </>:<>
@@ -207,9 +217,10 @@ function App() {
                 </div> 
               </div>
               <div className="ml-auto self-center w-1/2 md:w-1/5">
-                <div onClick={()=>{setValues({...values,appointmentDetails:[]});setStep(3)}} className="text-center p-2 border text-primary rounded mx-3">CHANGE</div>
+                <div onClick={()=>{setStep(3)}} className="text-center p-2 border text-primary rounded mx-3">CHANGE</div>
               </div>
             </div> 
+            {step === 3?<AppointmentDetails {...props} />:<></>}
           </div>
         
         </>:<>

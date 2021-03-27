@@ -2,11 +2,68 @@ import React, { Component } from 'react'
 import { useForm } from "react-hook-form";
 
 export default function AppointmentDetails(props){
+  var date1 = new Date();
+  date1.setDate(date1.getDate() + 2);
+  var date2 = new Date();
+  date2.setDate(date2.getDate() + 3);
  
   const { values, setValues, handleStep, family, setFamily } = props
-  const { register, getValues, handleSubmit, watch, errors } = useForm();
+  const { register, getValues, setValue, handleSubmit, watch, errors } = useForm({
+    defaultValues:{
+      street1:values.appointmentDetails[0]?.street,
+      locality1:values.appointmentDetails[0]?.locality,
+      city1:values.appointmentDetails[0]?.city,
+      state1:values.appointmentDetails[0]?.state,
+      landmark1:values.appointmentDetails[0]?.landmark,
+      date1:values.appointmentDetails[0]?.date[0],
+      time1:values.appointmentDetails[0]?.time[0],
+      date2:values.appointmentDetails[0]?.date[1],
+      time2:values.appointmentDetails[0]?.time[1],
+      street2:values.appointmentDetails[1]?.street,
+      locality2:values.appointmentDetails[1]?.locality,
+      city2:values.appointmentDetails[1]?.city,
+      state2:values.appointmentDetails[1]?.state,
+      landmark2:values.appointmentDetails[1]?.landmark,
+      date3:values.appointmentDetails[0]?.date[2],
+      time3:values.appointmentDetails[0]?.time[2],
+      date4:values.appointmentDetails[0]?.date[3],
+      time4:values.appointmentDetails[0]?.time[3],
+
+    }
+  });
   
+  const timeList = [
+    "7:00 AM - 9:00 AM",
+    "9:00 AM - 11:00 AM",
+    "11:00 AM - 1:00 PM",
+    "1:00 PM - 3:00 PM",
+  ]
   
+
+  const copyAddress = (e) => {
+    if(e.target.checked){
+      setValue("state2",getValues('state1'))
+      setValue("city2",getValues('city1'))
+      setValue("street2",getValues('street1'))
+      setValue("locality2",getValues('locality1'))
+      setValue("landmark2",getValues('landmark1'))
+      setValue("date3",getValues('date1'))
+      setValue("time3",getValues('time1'))
+      setValue("date4",getValues('date2'))
+      setValue("time4",getValues('time2'))
+    }else{
+      setValue("state2","")
+      setValue("city2","")
+      setValue("street2","")
+      setValue("locality2","")
+      setValue("landmark2","")
+      setValue("date3",null)
+      setValue("time3",null)
+      setValue("date4",null)
+      setValue("time4",null)
+    }
+  }
+
   const onSubmit = (data) => {
     const address1 = data.street1 + " " + data.locality1 + " " + data.landmark1 + " " + data.city1 + " " + data.state1;
     const address2 = data.street2 + " " + data.locality2 + " " + data.landmark2 + " " + data.city2 + " " + data.state2;
@@ -14,8 +71,10 @@ export default function AppointmentDetails(props){
     const date2 = data.date2 + " " + data.time2; 
     const date3 = data.date3 + " " + data.time3; 
     const date4 = data.date4 + " " + data.time4; 
-    const apmt1 = {address:address1,date1:date1,date2:date2}
-    const apmt2 = {address:address2,date1:date3,date2:date4}  
+    const apmt1 = {address:address1,street:data.street1,locality:data.locality1,city:data.city1,state:data.state1,
+      landmark:data.landmark1,date1:date1,date2:date2,date:[data.date1,data.date2],time:[data.time1,data.time2]}
+    const apmt2 = {address:address2,street:data.street2,locality:data.locality2,city:data.city2,state:data.state2,
+      landmark:data.landmark2,date1:date3,date2:date4,date:[data.date3,data.date4],time:[data.time3,data.time4]}  
     setValues({...values,appointmentDetails:family?[apmt1,apmt2]:[apmt1]})
     handleStep();
   }
@@ -60,8 +119,8 @@ export default function AppointmentDetails(props){
             {errors.street1?.type==="required" && <small className="text-danger">Street Address is required</small>}
           </div>
           <div className="col-md-4 my-1"> 
-            <div className="py-2 text-dark font-medium">Landmark*</div>
-            <input type="text" name="landmark1" ref={register({required:true})} className="form-control" placeholder="Landmark" />
+            <div className="py-2 text-dark font-medium">Landmark</div>
+            <input type="text" name="landmark1" ref={register} className="form-control" placeholder="Landmark" />
             {errors.landmark1?.type==="required" && <small className="text-danger">Landmark is required</small>}
           </div>
           
@@ -72,11 +131,16 @@ export default function AppointmentDetails(props){
             <div className="py-2">Prefered slot 1</div>
           </div>
           <div className="col-md-4 my-1"> 
-            <input type="date" name="date1" ref={register({required:true})} className="form-control" />
+            <input type="date" min={date1.toISOString().substr(0,10)} name="date1" ref={register({required:true})} className="form-control" />
             {errors.date1?.type==="required" && <small className="text-danger">Date is required</small>}
           </div>
           <div className="col-md-4 my-1">
-            <input type="time" name="time1" ref={register({required:true})} className="form-control" />
+            <select name="time1"ref={register({required:true})} className="form-select">
+              <option value="">- Select -</option>
+              {timeList.map((e,k)=>(
+                <option key={k} value={e}> {e} </option>
+              ))}
+            </select>
             {errors.time1?.type==="required" && <small className="text-danger">Time is required</small>}
           </div>
           <div className="col-md-4"></div>
@@ -84,11 +148,16 @@ export default function AppointmentDetails(props){
             <div className="py-2">Prefered slot 2</div>
           </div>
           <div className="col-md-4 my-1">  
-            <input type="date" name="date2" ref={register({required:true})} className="form-control" />
+            <input type="date" min={date2.toISOString().substr(0,10)} name="date2" ref={register({required:true})} className="form-control" />
             {errors.date2?.type==="required" && <small className="text-danger">Date is required</small>}
           </div>
           <div className="col-md-4 my-1">
-            <input type="time" name="time2" ref={register({required:true})} className="form-control" />
+            <select name="time2"ref={register({required:true})} className="form-select">
+              <option value="">- Select -</option>
+              {timeList.map((e,k)=>(
+                <option key={k} value={e}> {e} </option>
+              ))}
+            </select>
             {errors.time2?.type==="required" && <small className="text-danger">Time is required</small>}
           </div>
 
@@ -96,6 +165,11 @@ export default function AppointmentDetails(props){
           
           {family?<>
 
+          <div className="col-md-12">
+            <div className="py-2 text-dark font-medium">
+              <input type="checkbox" name="copy" className="mr-2" onClick={copyAddress} />
+              Copy address</div> 
+          </div>
           <div className="col-md-12">
             <div className="py-2 text-dark font-medium">Address for {values.employeeDetails[1]?.name} *</div> 
           </div>
@@ -131,8 +205,8 @@ export default function AppointmentDetails(props){
             {errors.street2?.type==="required" && <small className="text-danger">Street Address is required</small>}
           </div>
           <div className="col-md-4 my-1"> 
-            <div className="py-2 text-dark font-medium">Landmark*</div>
-            <input type="text" name="landmark2" ref={register({required:true})} className="form-control" placeholder="Landmark" />
+            <div className="py-2 text-dark font-medium">Landmark</div>
+            <input type="text" name="landmark2" ref={register} className="form-control" placeholder="Landmark" />
             {errors.landmark2?.type==="required" && <small className="text-danger">Landmark is required</small>}
           </div>
           
@@ -143,11 +217,16 @@ export default function AppointmentDetails(props){
             <div className="py-2">Prefered slot 1</div>
           </div>
           <div className="col-md-4 my-1"> 
-            <input type="date" name="date3" ref={register({required:true})} className="form-control" />
+            <input type="date" min={date1.toISOString().substr(0,10)} name="date3" ref={register({required:true})} className="form-control" />
             {errors.date3?.type==="required" && <small className="text-danger">Date is required</small>}
           </div>
           <div className="col-md-4 my-1">
-            <input type="time" name="time3" ref={register({required:true})} className="form-control" />
+            <select name="time3"ref={register({required:true})} className="form-select">
+              <option value="">- Select -</option>
+              {timeList.map((e,k)=>(
+                <option key={k} value={e}> {e} </option>
+              ))}
+            </select>
             {errors.time3?.type==="required" && <small className="text-danger">Time is required</small>}
           </div>
           <div className="col-md-4"></div>
@@ -155,11 +234,16 @@ export default function AppointmentDetails(props){
             <div className="py-2">Prefered slot 2</div>
           </div>
           <div className="col-md-4 my-1">  
-            <input type="date" name="date4" ref={register({required:true})} className="form-control" />
+            <input type="date" min={date2.toISOString().substr(0,10)} name="date4" ref={register({required:true})} className="form-control" />
             {errors.date4?.type==="required" && <small className="text-danger">Date is required</small>}
           </div>
           <div className="col-md-4 my-1">
-            <input type="time" name="time4" ref={register({required:true})} className="form-control" />
+            <select name="time4" ref={register({required:true})} className="form-select">
+              <option value="">- Select -</option>
+              {timeList.map((e,k)=>(
+                <option key={k} value={e}> {e} </option>
+              ))}
+            </select>
             {errors.time4?.type==="required" && <small className="text-danger">Time is required</small>}
           </div>
           
