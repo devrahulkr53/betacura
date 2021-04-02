@@ -20,6 +20,7 @@ function App() {
     employeeDetails:[],
     packageDetails:[],
     appointmentDetails:[],
+    charge:false
   })
 
 
@@ -27,6 +28,9 @@ function App() {
     setStep(step+1)
   }
  
+  useEffect(()=>{
+    // localStorage.setItem('userInfo',JSON.stringify({title:"Mr.",firstName:"ABC",email:"abc12abc@gmail.com",uid:"10009210902"}))
+  },[])
 
   const onSubmit = () => {
     var totalPrice = 0;
@@ -40,16 +44,13 @@ function App() {
         email:el.email,
         mobile:el.phone,
         relationshipType:key===0?"Self":"Family",
-        package:{
+        packages:{
           packageName:values.packageDetails[key].packageName,
+          pkgDesc:values.packageDetails[key].pkgDesc,
           price:values.packageDetails[key].price,
-          addons:values.packageDetails[key].addons,
+          addOnPackages:values.packageDetails[key].addOnPackages,
         },
-        appointment:{
-          address:values.appointmentDetails[key].address,
-          date1:values.appointmentDetails[key].date1,
-          date2:values.appointmentDetails[key].date2
-        },
+        appointment:values.appointmentDetails[key],
       }
     })
     
@@ -61,7 +62,7 @@ function App() {
       employeeId:values.employeeDetails[0].id,
       employeeName:values.employeeDetails[0].name,
       identificationType:values.employeeDetails[0].idprooftype,
-      identificationDocUrl:values.employeeDetails[0].idproof,
+      // identificationDocUrl:values.employeeDetails[0].idproof,
       mobile:values.employeeDetails[0].phone,
       packageDetails:pkg,
       totalConvienceCharge:0,
@@ -71,11 +72,54 @@ function App() {
     console.log(data)
     setStep(step+1)
 
-    fetch(`http://13.233.125.97:8080/incoming-lead/receive/w/appointment`,{
-      method:"POST",
-      body:JSON.stringify(data)
+    function blobToUint8Array(b) {
+      var uri = URL.createObjectURL(b),
+          xhr = new XMLHttpRequest(),
+          i,
+          ui8;
+  
+      xhr.open('GET', uri, false);
+      xhr.send();
+  
+      URL.revokeObjectURL(uri);
+  
+      ui8 = new Uint8Array(xhr.response.length);
+  
+      for (i = 0; i < xhr.response.length; ++i) {
+          ui8[i] = xhr.response.charCodeAt(i);
+      }
+  
+      return ui8;
+    } 
+    var formData = new FormData();
+    formData.append("type","BCuraLead")
+    formData.append("file",URL.createObjectURL(values.employeeDetails[0].idproof[0]))
+    formData.append("fileName",values.employeeDetails[0].idproof[0].name)
+    formData.append("mediaType","image")
+ 
+    const serverOrigin ='http://13.233.125.97:8080';
+    fetch( serverOrigin+"/upload/image",{ 
+      method: 'POST',
+      body: formData,
     }).then(d=>d.json()).then(json=>{
       console.log(json)
+    }).catch(err=>{
+      console.log(err)
+    })
+
+
+    fetch(`${serverOrigin}/incoming-lead/receive/w/appointment`,{
+      method:"POST",
+      body:JSON.stringify(data),
+      headers: {
+        "Accept": "application/json"
+      },  
+    })
+    .then(d=>d.json())
+    .then(json=>{
+      console.log(json)
+    }).catch(err=>{
+      console.log(err)
     })
   }
 
@@ -88,22 +132,21 @@ function App() {
  
 
       <div className="container-fluid">
-        
         {step > 4?<div className="py-10" style={{height:500}}>
-          <div className="text-center display-6">Thank you for choosing your Wellness Health Screening and placing your request with us.</div>
-          <div className="text-center text-secondary text-3xl">Your case will be allocated to dedicated case manager and 
+          <div className="text-center text-2xl">Thank you for choosing your Wellness Health Screening and placing your request with us.</div>
+          <div className="text-center text-secondary text-1xl">Your case will be allocated to dedicated case manager and 
           you will be contacted within 24 working hours. Please inbox us at <a className="text-primary" href="http://contact@betacura.com">contact@betacura.com </a>   
           if you have any questions. You can explore more about us by hitting on <a className="text-primary" href="http://www.betacura.com">www.betacura.com</a> </div>
-          <div onClick={()=>window.location.reload()} className="px-4 p-1 border shadow-sm rounded text-center col-md-2 mx-auto my-3 text-primary">START Again</div>
+          {/* <div onClick={()=>window.location.reload()} className="px-4 p-1 border shadow-sm rounded text-center col-md-2 mx-auto my-3 text-primary">START Again</div> */}
         </div>:<>
         
         {/* Employee Details */}
         {values.employeeDetails.length > 0 ?<>
           <div className="container-fluid p-0 md:p-2 my-3">
             <div className="flex-row md:flex bg-white p-3 cursor-pointer border shadow-sm">
-              <div className="flex items-center">
+              <div className="flex items-center w-full md:w-4/5">
                 <div className="w-10 p-2 text-center self-start border rounded bg-light shadow-sm">1</div>
-                <div className="text-xl px-3 font-medium">
+                <div className="text-sm md:text-xl px-3 font-medium w-full">
                   <div className="flex items-center">
                     <div>Employee Details</div>  
                     <img src={check} width="20px" className="mx-3" />
@@ -141,9 +184,9 @@ function App() {
         {values.packageDetails.length > 0 ?<>
           <div className="container-fluid p-0 md:p-2 my-3">
             <div className="flex-row md:flex bg-white p-3 cursor-pointer border shadow-sm">
-              <div className="flex items-center">
+              <div className="flex items-center w-full md:w-4/5">
                 <div className="w-10 p-2 text-center self-start border rounded bg-light shadow-sm">2</div>
-                <div className="text-xl px-3 font-medium">
+                <div className="text-sm md:text-xl px-3 font-medium w-full">
                   <div className="flex items-center">
                     <div>Package Details</div>  
                     <img src={check} width="20px" className="mx-3" />
@@ -152,7 +195,7 @@ function App() {
                     {values.packageDetails.map((el,key)=>(
                       <> 
                         <div key={key} className="text-dark text-sm">
-                          <span className="text-lg font-medium">{values.employeeDetails[key].name}</span>
+                          <span className="text-sm md:text-lg font-medium">{values.employeeDetails[key].name}</span>
                           : {el.packageName}</div> 
                         <div className="text-dark text-sm">Add-on Package: {el.addons.map(el=>(el+","))}</div> 
                       </>
@@ -190,9 +233,9 @@ function App() {
         {values.appointmentDetails.length > 0 ?<>
           <div className="container-fluid p-0 md:p-2 my-3">
             <div className="flex-row md:flex bg-white p-3 cursor-pointer border shadow-sm">
-              <div className="flex items-center">
+              <div className="flex items-center w-full md:w-4/5">
                 <div className="w-10 p-2 text-center self-start border rounded bg-light shadow-sm">3</div>
-                <div className="text-xl px-3 font-medium">
+                <div className="text-sm md:text-xl px-3 font-medium w-full">
                   <div className="flex items-center">
                     <div>Appointment Details</div>  
                     <img src={check} width="20px" className="mx-3" />
@@ -201,9 +244,11 @@ function App() {
                     {values.appointmentDetails.map((el,key)=>(
                       <> 
                         <div key={key} className="text-dark text-sm">
-                          <span className="text-lg font-medium">{values.employeeDetails[key].name}</span>
+                          <span className="text-sm md:text-lg font-medium">{values.employeeDetails[key].name}</span>
                           : {el.address}</div> 
-                        <div className="text-dark text-sm">Date & Time : {el.date1}</div> 
+                          {el.date1?<>
+                            <div className="text-dark text-sm">Date & Time : {el.date1}</div>
+                          </>:<></>}
                       </>
                     ))} 
                   </>:<>

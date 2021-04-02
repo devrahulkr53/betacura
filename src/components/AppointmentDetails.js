@@ -10,25 +10,25 @@ export default function AppointmentDetails(props){
   const { values, setValues, handleStep, family, setFamily } = props
   const { register, getValues, setValue, handleSubmit, watch, errors } = useForm({
     defaultValues:{
-      street1:values.appointmentDetails[0]?.street,
+      street1:values.appointmentDetails[0]?.address,
       locality1:values.appointmentDetails[0]?.locality,
       city1:values.appointmentDetails[0]?.city,
       state1:values.appointmentDetails[0]?.state,
       landmark1:values.appointmentDetails[0]?.landmark,
-      date1:values.appointmentDetails[0]?.date[0],
-      time1:values.appointmentDetails[0]?.time[0],
-      date2:values.appointmentDetails[0]?.date[1],
-      time2:values.appointmentDetails[0]?.time[1],
-      street2:values.appointmentDetails[1]?.street,
+      date1:values.appointmentDetails[0]?.date1,
+      time1:values.appointmentDetails[0]?.time1,
+      date2:values.appointmentDetails[0]?.date2,
+      time2:values.appointmentDetails[0]?.time2,
+      street2:values.appointmentDetails[1]?.address,
       locality2:values.appointmentDetails[1]?.locality,
       city2:values.appointmentDetails[1]?.city,
       state2:values.appointmentDetails[1]?.state,
       landmark2:values.appointmentDetails[1]?.landmark,
-      date3:values.appointmentDetails[0]?.date[2],
-      time3:values.appointmentDetails[0]?.time[2],
-      date4:values.appointmentDetails[0]?.date[3],
-      time4:values.appointmentDetails[0]?.time[3],
-
+      // date3:values.appointmentDetails[1]?.date3,
+      // time3:values.appointmentDetails[1]?.time3,
+      // date4:values.appointmentDetails[1]?.date4,
+      // time4:values.appointmentDetails[1]?.time4,
+      
     }
   });
   
@@ -65,16 +65,14 @@ export default function AppointmentDetails(props){
   }
 
   const onSubmit = (data) => {
-    const address1 = data.street1 + " " + data.locality1 + " " + data.landmark1 + " " + data.city1 + " " + data.state1;
-    const address2 = data.street2 + " " + data.locality2 + " " + data.landmark2 + " " + data.city2 + " " + data.state2;
-    const date1 = data.date1 + " " + data.time1; 
-    const date2 = data.date2 + " " + data.time2; 
-    const date3 = data.date3 + " " + data.time3; 
-    const date4 = data.date4 + " " + data.time4; 
-    const apmt1 = {address:address1,street:data.street1,locality:data.locality1,city:data.city1,state:data.state1,
-      landmark:data.landmark1,date1:date1,date2:date2,date:[data.date1,data.date2],time:[data.time1,data.time2]}
-    const apmt2 = {address:address2,street:data.street2,locality:data.locality2,city:data.city2,state:data.state2,
-      landmark:data.landmark2,date1:date3,date2:date4,date:[data.date3,data.date4],time:[data.time3,data.time4]}  
+    // const date1 = data.date1 + " " + data.time1; 
+    // const date2 = data.date2 + " " + data.time2; 
+    // const date3 = data.date3 + " " + data.time3; 
+    // const date4 = data.date4 + " " + data.time4; 
+    const apmt1 = {address:data.street1,locality:data.locality1,city:data.city1,state:data.state1,
+      landmark:data.landmark1,date1:data.date1,date2:data.date2,time1:data.time1,time2:data.time2}
+    const apmt2 = {address:data.street2,locality:data.locality2,city:data.city2,state:data.state2,
+      landmark:data.landmark2}  
     setValues({...values,appointmentDetails:family?[apmt1,apmt2]:[apmt1]})
     handleStep();
   }
@@ -210,7 +208,7 @@ export default function AppointmentDetails(props){
             {errors.landmark2?.type==="required" && <small className="text-danger">Landmark is required</small>}
           </div>
           
-          <div className="col-md-12">
+          {/* <div className="col-md-12">
             <div className="py-2 text-dark font-medium">Select An Appointment*</div> 
           </div>
           <div className="col-md-12">
@@ -245,7 +243,7 @@ export default function AppointmentDetails(props){
               ))}
             </select>
             {errors.time4?.type==="required" && <small className="text-danger">Time is required</small>}
-          </div>
+          </div> */}
           
           
           </>:<></>}

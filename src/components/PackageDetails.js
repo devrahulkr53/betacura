@@ -1,116 +1,184 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect } from 'react'
 import { useForm } from "react-hook-form";
+import { addons, customizePackageList } from "./globalVar"
 
 export default function PackageDetails(props){
-  const { values, setValues, handleStep, family, setFamily } = props
-  const { register, getValues, handleSubmit, watch, errors } = useForm({
-    defaultValues:{
-      
-    }
-  });
   
-  const [addonPrice1,setAddonPrice1] = React.useState(0);
-  const [addonPrice2,setAddonPrice2] = React.useState(0);
-  const [totalPrice1,setPrice1] = React.useState(0);
-  const [totalPrice2,setPrice2] = React.useState(0);
-  const [totalPrice,setPrice] = React.useState(0);
-  const [addonbar1,setAddonbar1] = React.useState(true);
-  const [addonbar2,setAddonbar2] = React.useState(true);
-  const [category1,setCategory1] = React.useState("")
-  const [category2,setCategory2] = React.useState("")
-  const [selectedPackage1,setSelectedPackage1] = React.useState(null)
-  const [selectedPackage2,setSelectedPackage2] = React.useState(null)
-
+  const [customizePrice1,setCustomizePrice1] = React.useState(0);
+  const [customizePrice2,setCustomizePrice2] = React.useState(0);
 
   const packageList = [
-    {name:"Package A",price:1200,count:29,data:[
+    {name:"Package A",price:2000,count:29,data:[
       "Preliminary Test (Complete Blood Count, ESR, Urine Routine)","Diabetic Checkup (F.B.S, HBA1C)",
       "Kidney Profile (Electrolytes, BUN, Creatinine, Uric Acid, Calcium, Phosphorus)",
       "Liver Profile (Bilirubin Total, Bilirubin Direct, Bilirubin Indirect, SGOT, SGPT, Total Protien, Albumin, Globulin, Alkaline  Phosphate, Gamma G.T)",
       "Lipid Profile (Total Cholesterol, LDLC, VLDL, LDL/HDLC Ratio, TC/DLC Ratio)",
       "Physician Examination","Teleconsultation"
     ]},
-    {name:"Package B",price:1800,count:23,data:[
+    {name:"Package B",price:2000,count:23,data:[
       "Preliminary Test (Complete Blood Count, ESR, Urine Routine)","Diabetic Checkup (F.B.S, HBA1C)",
       "Kidney Profile (Electrolytes, BUN, Creatinine, Uric Acid, Calcium, Phosphorus)",
       "Lipid Profile (Total Cholesterol, LDLC, VLDL, LDL/HDLC Ratio, TC/DLC Ratio)",
       "Thyroid Profile (T3, T4, TSH)","Radiological Test (ECG)",
       "USG Abdomen","Physician Examination","Teleconsultation"
     ]},
-  ]
-  const addons = [
-    {value:"Vital Check ( Blood Sugar, BP & PR ) - 3 Tests",price:75,sub:[
-      "Blood Glucose fasting / Random","Blood Pressure Check (BP)","Pulse Rate Check (PR)"
-    ]},
-    {value:"Thyroid (TFT) - 5 Tests",price:500,sub:[
-      "Total Tri-iodothyronine (T3)","Total Thyroxine (T4)","FT3","FT4","Thyroid Stimulating Hormone (TSH)"
-    ]},
-    {value:"Heart Risk Profile (Lipid) - 9 Tests",price:300,sub:[
-      "Total Cholesterol","HDL (Good Cholesterol)","Non HDL Cholesterol","LDL (Bad Cholesterol)",
-      "VLDL Cholesterol","Triglycerides","LDL/HDL Cholesterol Ratio","HDL/LDL Cholesterol Ratio",
-      "TC (Total Cholesterol) /HDL Cholesterol Ratio"
-    ]},
-    {value:"Liver Function Test (LFT) - 11 Tests",price:300,sub:[
-      "Billirubin-TOtal","Billirubin-Direct","Billirubin-Indirect","Alkaline Phosphatase ( ALP )",
-      "SGOT (AST)","SGPT (ALT)","Protein-Total","Albumin","Globulin","Serum Albumin / Globulin Ratio",
-      "Gamma GT/GGT ( Gamma Glutamyl Transferase)"
-    ]},
-    {value:"Kidney Function Test (KFT) - 6 Tests + Electrolytes",price:300,sub:[
-      "Uric Acid","SErum Urea","Serum Creatinine","Urea/Creatinine Ratio","Blood Urea Nitrogen (BUN)",
-      "BUN / Cretinine Ratio","Electrolyte Profile (Potassium, Sodium & Chloride)"
-    ]},
-    {value:"Complete Urine Routine Analysis (CUE) - 20 Tests",price:300,sub:[
-      "Color","Specific Gravity","Apparence","REaction (pH)","Protiens","Glucose","Nitrites","Blood","Ketones",
-      "Bilirubin","Urobilinogen","Leukocutes","PUS (WBC) Cells","RBC","Epithelial Cells","Crystals","Casts","Bacteria",
-      "Budding Yeasts Cells","Other Findings"
-    ]},
-    {value:"Complete Blood Counr (CBC) - 24 Tests",price:150,sub:[
-      "Hemoglobin (Hb)","Total WBC Count (TLC)","R.B.C Count","MCV","MCH","MCHC","Packed Cell Volume (PCV)","Platelet count",
-      "RDW-SD","RDW-CV","PDW","MPV","P-LCR","PCT","Neutrophils","Lymphocytes","Monocytes","Eosinophills","Basophils",
-      "Absolute Neutrophils Count","Absolute Lymphocytes Count","Absolute Monocytes Count",
-      "Absolute Eosinophils Count","Absolute Basophils Count",
-    ]},
-    {value:"Vitamin B12",price:350,sub:[]},
-    {value:"Vitamin D-3 (25-Hydroxy)",price:650,sub:[]},
-    {value:"ECG",price:300,sub:[]},
-    {value:"USG(Abdomen & Pelvis)",price:600,sub:[]},
-    {value:"Chest X-ray",price:200,sub:[]},
-    {value:"PSA (Male)",price:350,sub:[]},
-    {value:"Eye Checkup",price:150,sub:[]},
-    {value:"GP Consulation",price:250,sub:[]},
-    {value:"Mamography",price:1000,sub:[]},
-    {value:"Pap Smear (Female)",price:800,sub:[]},
+    {name:"Customize Package",price:customizePrice2,count:0,data:[]}
   ]
   
+  const { values, setValues, handleStep, family, setFamily } = props
+  const [addonPrice1,setAddonPrice1] = React.useState(0);
+  const [addonPrice2,setAddonPrice2] = React.useState(0);
+  const [totalPrice1,setPrice1] = React.useState(0);
+  const [totalPrice2,setPrice2] = React.useState(0);
+  const [totalPrice,setPrice] = React.useState(0);
+  const [addonbar1,setAddonbar1] = React.useState(false);
+  const [addonbar2,setAddonbar2] = React.useState(false);
+  const [customizeBar1,setCustomizeBar1] = React.useState(false);
+  const [customizeBar2,setCustomizeBar2] = React.useState(false);
+  const [category1,setCategory1] = React.useState(values.packageDetails[0]?values.packageDetails[0].category:"")
+  const [category2,setCategory2] = React.useState(values.packageDetails[1]?values.packageDetails[1].category:"")
+  const [selectedPackage1,setSelectedPackage1] = React.useState(String(packageList.findIndex(e=>(
+    e.name==values.packageDetails[0]?.packageName
+  ))) === "-1"?"":String(packageList.findIndex(e=>(
+    e.name==values.packageDetails[0]?.packageName
+  ))))
+  const [selectedPackage2,setSelectedPackage2] = React.useState(String(packageList.findIndex(e=>(
+    e.name==values.packageDetails[1]?.packageName
+  ))) === "-1"?"":String(packageList.findIndex(e=>(
+    e.name==values.packageDetails[1]?.packageName
+  ))))
+
   const hcc = 250;
+  
+   
+  const [charge,setCharge] = React.useState(false);
+  
+  const { register, getValues, handleSubmit, watch, errors } = useForm({
+    defaultValues:{
+      package1:String(packageList.findIndex(e=>(
+        e.name==values.packageDetails[0]?.packageName
+      ))) === "-1"?"":String(packageList.findIndex(e=>(
+        e.name==values.packageDetails[0]?.packageName
+      ))),
+      package2:String(packageList.findIndex(e=>(
+        e.name==values.packageDetails[1]?.packageName
+      ))) === "-1"?"":String(packageList.findIndex(e=>(
+        e.name==values.packageDetails[1]?.packageName
+      ))),
+      addons1:values.packageDetails[0]?.addonsArray,
+      addons2:values.packageDetails[1]?.addonsArray,
+      customizePackage1:values.packageDetails[0]?.customArray,
+      customizePackage2:values.packageDetails[1]?.customArray,
+    }
+  });
+  
 
-  const handleChange1 = () => {
-    const data = getValues("addons1")
-    var price = 0;
-    data.map(el=>{
-      price += addons[Number(el)].price
+  useEffect(()=>{
+    handleChange() 
+  },[])
+  
+  const handleChange = () => {
+    const selPkg1 = getValues("package1")?getValues("package1"):""
+    const selPkg2 = getValues("package2")?getValues("package2"):""
+    const addons1 = getValues("addons1")
+    const customizePackage1 = getValues("customizePackage1")
+    const addons2 = getValues("addons2")
+    const customizePackage2 = getValues("customizePackage2")
+    var price1 = 0, price2 = 0;
+    addons1?.map(el=>{
+      price1 += addons[Number(el)].price
     })
-    setAddonPrice1(price)
-    setPrice1(price)
-  }
-  const handleChange2 = () => {
-    const data = getValues("addons2")
-    var price = 0;
-    data.map(el=>{
-      price += addons[Number(el)].price
+    customizePackage1?.map(el=>{
+      price2 += customizePackageList[Number(el)].price
     })
-    setAddonPrice2(price)
-    setPrice2(price + (packageList[getValues("package2")]?packageList[getValues("package2")].price:0))
+    setAddonPrice1(price1)
+    setCustomizePrice1(price2)
+    if(price2 > 2000){
+      var calc1 = price1 + price2 - 2000;
+      setPrice1(calc1)
+    }else{
+      setPrice1(price1)
+    }
+
+
+    if(family){
+      var  price3 = 0, price4 = 0;
+      var pkgprice = packageList[selPkg2]?packageList[selPkg2].price:0;
+      addons2?.map(el=>{
+        price3 += addons[Number(el)].price
+      })
+      customizePackage2?.map(el=>{
+        price4 += customizePackageList[Number(el)].price
+      })
+      setAddonPrice2(price3)
+      setCustomizePrice2(price4)
+      var calc2 = price3 + price4 + pkgprice
+      setPrice2(calc2)
+    }
     
-  } 
+    if(family){
+      setCharge((addons1?.length > 0 || addons2.length > 0) && (selPkg1 == "" && selPkg2 == ""))
+    }else{
+      setCharge((addons1?.length > 0) && (selPkg1 == ""))
+    }
 
+  } 
+ 
   const onSubmit = (data) => {
-    console.log(data.addons1)
     var addons1 = data.addons1?.map(e=>addons[Number(e)].value)
     var addons2 = data.addons2?.map(e=>addons[Number(e)].value)
-    var pkg1 = {packageName:packageList[data.package1]?.name,count:packageList[data.package1]?.count,addons:addons1,price:totalPrice1,pkgprice:0,addonprice:addonPrice1}
-    var pkg2 = {packageName:packageList[data.package2]?.name,count:packageList[data.package2]?.count,addons:addons2,price:totalPrice2,pkgprice:packageList[data.package2]?.price,addonprice:addonPrice2}
-    setValues({...values,packageDetails:family?[pkg1,pkg2]:[pkg1]})
+    var customizePackage1 = data.customizePackage1?.map(e=>customizePackageList[Number(e)].value)
+    var customizePackage2 = data.customizePackage2?.map(e=>customizePackageList[Number(e)].value)
+    var customized1 = data.package1 === "2"
+    var customized2 = data.package2 === "2"
+    var pkgprice1,pkgprice2,count1,count2;
+    if(!customized1){
+      count1 = packageList[data.package1]?.count
+      pkgprice1 = packageList[data.package1]?.price
+    }else{
+      count1 = data.customizePackage1.length
+      pkgprice1 = customizePrice1
+    }
+    if(!customized2){
+      count2 = packageList[data.package2]?.count
+      pkgprice2 = packageList[data.package2]?packageList[data.package2].price:0
+    }else{
+      count2 = data.customizePackage2.length
+      pkgprice2 = customizePrice2
+    }
+    var addonPackages1 = data.addons1?.map(e=>({name:addons[Number(e)].value,price:addons[Number(e)].price}))
+    var addonPackages2 = data.addons2?.map(e=>({name:addons[Number(e)].value,price:addons[Number(e)].price}))
+    var pkg1 = {
+      packageName:packageList[data.package1]?.name,
+      pkgDesc:packageList[data.package1]?.data.join(", "),
+      addOnPackages:addonPackages1,
+      count:count1,
+      addonsArray:data.addons1,
+      addons:addons1,
+      customArray:data.customizePackage1,
+      customizePackage:customizePackage1,
+      // price:price1,
+      pkgprice:pkgprice1,
+      addonprice:addonPrice1,
+      customized:customized1,
+      category:category1
+    }
+    var pkg2 = {
+      packageName:packageList[data.package2]?.name,
+      pkgDesc:packageList[data.package2]?.data.join(", "),
+      addOnPackages:addonPackages2,
+      count:count2,
+      addonsArray:data.addons2,
+      addons:addons2,
+      customArray:data.customizePackage2,
+      customizePackage:customizePackage2,
+      // price:price2,
+      pkgprice:pkgprice2,
+      addonprice:addonPrice2,
+      customized:customized2,
+      category:category2
+    }
+    setValues({...values,packageDetails:family?[pkg1,pkg2]:[pkg1],charge:charge})
     handleStep();
   }
   return (
@@ -119,168 +187,89 @@ export default function PackageDetails(props){
       <div className="row">  
         {/* Package 1 */} 
         <div className="col-md-12">
-          <select name="category" className="form-select" defaultValue={category1} onChange={e=>setCategory1(e.target.value)}>
+          <div className="py-2 text-dark font-medium">Package  
+          {family?<><span>( For {values.employeeDetails[0]?.name} ) </span></>:<></>} 
+          *</div>
+          <select name="category" className="form-select my-1" defaultValue={category1} onMouseLeave={e=>handleChange()} onChange={e=>setCategory1(e.target.value)}>
             <option value="">- Select -</option>
             <option value="0">Corporate Sponsored</option>
             <option value="1">Addons</option>
           </select>
-
-          <div className={category1==="0"?"block":"hidden"}>
-            <div className="py-2 text-dark font-medium">Package  
-            {family?<><span>( For {values.employeeDetails[0]?.name} ) </span></>:<></>} 
-            *</div>
-            <select name={"package1"} defaultValue={selectedPackage1} onChange={e=>setSelectedPackage1(e.target.value)} className="form-select" ref={register({required:true})}>
-                <option value="">- Select Package -</option>
-                  {packageList.map((el,key)=>(
-                    <option value={key}>{el.name}</option>
-                  ))}
-                {/* <option value="Comprehensive Active Professional Health Checkup">Comprehensive Active Professional Health Checkup</option>
-                <option value="Comprehensive young Indian Health Checkup">Comprehensive young Indian Health Checkup</option>
-                <option value="Young Indian Health Checkup">Young Indian Health Checkup</option>
-                <option value="Active Professional Health Checkup">Active Professional Health Checkup</option> */}
-            </select>
-            {errors.package1?.type==="required" && <small className="text-danger">Package is required</small>}
-            {/* <div className="py-2 text-dark font-medium">Comprehensive Active Professional Health Checkup</div>
-            <div className="text-secondary -my-2">Ideal for individuals aged 41 to 60 years</div> */}
-            <div className="flex-row md:flex my-2">
-                <div className="w-full md:w-5/6"> 
-                  {packageList[selectedPackage1]?.data.map((e,k)=>(
-                    <span key={k}> {e + ", "} </span>
-                  ))} 
-                </div>
-              {selectedPackage1?<>
-                <div className="ml-auto text-right md:text-left px-4 font-medium w-full md:w-1/6">
-                  <div> <s> Rs. {packageList[selectedPackage1]?packageList[selectedPackage1].price:0} </s> </div>
-                  <div> FREE </div>
-                </div>
-              </>:<></>}
-            </div>
-          </div>
-
-
-          <div className={category1==="1"?"block":"hidden"}>
-            <div className="accordion my-2" id="accordionExample">
-              <div className="accordion-item">
-                <h2 className="accordion-header" onClick={e=>setAddonbar1(!addonbar1)}>
-                  <button className="accordion-button" type="button">
-                  Add-on Tests (Rs. {addonPrice1})
-                  </button>
-                </h2>
-                <div className={addonbar1?"accordion-collapse":"accordion-collapse collapse"}>
-                  <div className="accordion-body">
-                    <div className=""> 
-                      <div className="w-full">
-                        {addons.map((el,key)=>(
-                          <div key={key} className="flex items-start justify-between mr-1">
-                            <div className="flex items-start w-4/6">
-                              <input type="checkbox" className="m-2 ml-0" defaultValue={key} onChange={handleChange1} name="addons1" ref={register} />
-                              <div>
-                                <div className="text-lg font-medium mx-2">{el.value} </div>
-                                {el.sub.map((e,k)=>(
-                                  <div className="px-2" key={k}> {e} </div>
-                                ))}
-                              </div>
-                            </div>
-                            <div>Rs. {el.price} </div>
-                          </div>
-                        ))} 
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* <div className="flex items-center justify-between">
-              <div className="py-2 text-dark font-medium w-full">Add-on Tests</div>
-              <div className="px-4 font-medium text-right w-full md:w-2/6">
-                <div>Rs. {totalPrice1}</div> 
-              </div> 
-            </div>
-            <div className=""> 
-              <div className="w-full">
-                {addons.map((el,key)=>(
-                  <div key={key} className="flex items-start justify-between mr-1">
-                    <div className="flex items-start w-4/6">
-                      <input type="checkbox" className="m-2 ml-0" defaultValue={key} onChange={handleChange1} name="addons1" ref={register} />
-                      <div>
-                        <div className="text-lg font-medium mx-2">{el.value} </div>
-                        {el.sub.map((e,k)=>(
-                          <div className="px-2" key={k}> {e} </div>
-                        ))}
-                      </div>
-                    </div>
-                    <div>Rs. {el.price} </div>
-                  </div>
-                ))} 
-              </div>
-            </div> */}
-          </div>
-        </div>
-            
-
-        {/* Package 2 */}
-        {family?<>
-          <hr className="my-3" />
-          <div className="col-md-12">
-            <select name="category" className="form-select" defaultValue={category2} onChange={e=>setCategory2(e.target.value)}>
-              <option value="">- Select -</option>
-              <option value="0">Corporate Sponsored</option>
-              <option value="1">Addons</option>
-            </select>
-
-
-            <div className={category2==="0"?"block":"hidden"}>
-              <div className="py-2 text-dark font-medium">Package  
-              {family?<><span>( For {values.employeeDetails[1]?.name} ) </span></>:<></>} 
-              *</div>
-              <select name={"package2"} defaultValue={selectedPackage2} onChange={(e)=>{setSelectedPackage2(e.target.value);handleChange2()}} className="form-select" ref={register({required:true})}>
+          {category1==="0"?<>
+            <div>
+              <select name={"package1"} defaultValue={selectedPackage1} onChange={e=>{setSelectedPackage1(e.target.value);handleChange();}} className="form-select" ref={register}>
                   <option value="">- Select Package -</option>
-                  {packageList.map((el,key)=>(
-                    <option value={key}>{el.name}</option>
-                  ))}
-                  {/* <option value="Comprehensive Active Professional Health Checkup">Comprehensive Active Professional Health Checkup</option>
-                  <option value="Comprehensive young Indian Health Checkup">Comprehensive young Indian Health Checkup</option>
-                  <option value="Young Indian Health Checkup">Young Indian Health Checkup</option>
-                  <option value="Active Professional Health Checkup">Active Professional Health Checkup</option> */}
+                    {packageList.map((el,key)=>(
+                      <option value={key}>{el.name}</option>
+                    ))}
               </select>
-              {errors.package2?.type==="required" && <small className="text-danger">Package is required</small>}
-              {/* <div className="py-2 text-dark font-medium">Comprehensive Active Professional Health Checkup</div>
-              <div className="text-secondary -my-2">Ideal for individuals aged 41 to 60 years</div> */}
               <div className="flex-row md:flex my-2">
-                <div className="w-full md:w-5/6">
-                  {packageList[selectedPackage2]?.data.map((e,k)=>(
-                    <span key={k}> {e + ", "} </span>
-                  ))} 
-                </div>
-                <div className="text-right md:text-left px-4 font-medium w-full md:w-1/6">
-                  <div> Rs. {packageList[selectedPackage2]?packageList[selectedPackage2].price:0} </div>
-                </div>
+                  <div className="w-full md:w-5/6"> 
+                    {packageList[selectedPackage1]?.data.map((e,k)=>(
+                      <span key={k}> {e + ", "} </span>
+                    ))} 
+                  </div> 
+                {selectedPackage1 !== "2" && selectedPackage1 !== ""?
+                <div className="ml-auto text-right pl-4 font-medium w-full md:w-1/6">
+                    <div> <s> Rs. {packageList[selectedPackage1]?packageList[selectedPackage1].price:0} </s> </div>
+                    <div> FREE </div>
+                </div>:<></>}
               </div> 
+              <div className={selectedPackage1==="2"?"block":"hidden"}>
+                <div className="accordion my-2" id="accordionExample">
+                  <div className="accordion-item">
+                    <h2 className="accordion-header" onClick={e=>setCustomizeBar1(!customizeBar1)}>
+                      <button className={customizeBar1?"accordion-button":"accordion-button collapsed"} type="button">
+                      Customize Package <span className="text-lg font-medium text-dark px-2"> (Rs.  {customizePrice1<2000?<s> {customizePrice1} </s>:<> {customizePrice1} - 2000 = {customizePrice1-2000} </>} )</span>
+                      </button>
+                    </h2>
+                    <div className={customizeBar1?"accordion-collapse":"accordion-collapse collapse"}>
+                      <div className="accordion-body">
+                        <div className=""> 
+                          <div className="w-full">
+                            {customizePackageList.map((el,key)=>(
+                              <div key={key} className="flex items-start justify-between mr-1">
+                                <div className="flex items-start w-4/6">
+                                  <input type="checkbox" className="m-2 ml-0" defaultValue={key} onChange={handleChange} name="customizePackage1" ref={register} />
+                                  <div>
+                                    <div className="text-lg font-medium mx-2">{el.value} </div>
+                                    {el.sub.map((e,k)=>(
+                                      <div className="px-2" key={k}>{e}</div>
+                                    ))}
+                                  </div>
+                                </div>
+                                <div>Rs. {el.price} </div>
+                              </div>
+                            ))} 
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-
-
-            <div className={category2==="1"?"block":"hidden"}>
+          </>:<></>}
+ 
+          {category1===""?<></>:<>
+            <div>
               <div className="accordion my-2" id="accordionExample">
                 <div className="accordion-item">
-                  <h2 className="accordion-header" onClick={e=>setAddonbar2(!addonbar2)}>
-                    <button className="accordion-button" type="button">
-                    Add-on Tests (Rs. {addonPrice2})
+                  <h2 className="accordion-header" onClick={e=>setAddonbar1(!addonbar1)}>
+                    <button className={addonbar1?"accordion-button":"accordion-button collapsed"} type="button">
+                    Add-on Tests <span className="text-lg font-medium text-dark px-2"> (Rs. {addonPrice1})</span>
                     </button>
                   </h2>
-                  <div className={addonbar2?"accordion-collapse":"accordion-collapse collapse"}>
+                  <div className={addonbar1?"accordion-collapse":"accordion-collapse collapse"}>
                     <div className="accordion-body">
                       <div className=""> 
                         <div className="w-full">
                           {addons.map((el,key)=>(
                             <div key={key} className="flex items-start justify-between mr-1">
                               <div className="flex items-start w-4/6">
-                                <input type="checkbox" className="m-2 ml-0" defaultValue={key} onChange={handleChange2} name="addons2" ref={register} />
+                                <input type="checkbox" className="m-2 ml-0" defaultValue={key} onChange={handleChange} name="addons1" ref={register} />
                                 <div>
-                                  <div className="text-lg font-medium mx-2">{el.value} </div>
-                                  {el.sub.map((e,k)=>(
-                                    <div className="px-2" key={k}> {e} </div>
-                                  ))}
+                                  <div className="text-lg font-medium mx-2" style={{overflow:"hidden"}}>{el.value} </div>
                                 </div>
                               </div>
                               <div>Rs. {el.price} </div>
@@ -292,36 +281,138 @@ export default function PackageDetails(props){
                   </div>
                 </div>
               </div>
-              {/* <div className=""> 
-                <div className="w-full">
-                  {addons.map((el,key)=>(
-                    <div key={key} className="flex items-start justify-between mr-1">
-                      <div className="flex items-start w-4/6">
-                        <input type="checkbox" className="m-2 ml-0" defaultValue={key} onChange={handleChange2} name="addons2" ref={register} />
-                        <div>
-                          <div className="text-lg font-medium mx-2">{el.value} </div>
-                          {el.sub.map((e,k)=>(
-                            <div className="px-2" key={k}> {e} </div>
-                          ))}
+            </div>
+          </>}
+
+        </div>
+            
+
+        {/* Package 2 */}
+        {family?<>
+          <hr className="my-3" />
+          <div className="col-md-12">
+            <div className="py-2 text-dark font-medium">Package  
+            {family?<><span>( For {values.employeeDetails[1]?.name} ) </span></>:<></>} 
+            *</div>
+            <select name="category" className="form-select my-1" defaultValue={category2} onMouseLeave={e=>handleChange()} onChange={e=>setCategory2(e.target.value)}>
+              <option value="">- Select -</option>
+              <option value="0">Corporate Sponsored</option>
+              <option value="1">Addons</option>
+            </select>
+
+            {category2==="0"?<>
+              <div>
+                <select name={"package2"} defaultValue={selectedPackage2} onChange={(e)=>{setSelectedPackage2(e.target.value);handleChange()}} className="form-select" ref={register}>
+                    <option value="">- Select Package -</option>
+                    {packageList.map((el,key)=>(
+                      <option value={key}>{el.name}</option>
+                    ))}
+                </select>
+                <div className="flex-row md:flex my-2">
+                  <div className="w-full md:w-5/6">
+                    {packageList[selectedPackage2]?.data.map((e,k)=>(
+                      <span key={k}> {e + ", "} </span>
+                    ))}
+                  </div>
+                  {selectedPackage2 !== "2" && selectedPackage2 !== ""?
+                  <div className="text-right pl-4 font-medium w-full md:w-1/6">
+                      <div> Rs. {packageList[selectedPackage2]?packageList[selectedPackage2].price:0} </div>
+                  </div>:<></>}
+                </div>  
+                <div className={selectedPackage2==="2"?"block":"hidden"}>
+                  <div className="accordion my-2" id="accordionExample">
+                    <div className="accordion-item">
+                      <h2 className="accordion-header" onClick={e=>setCustomizeBar2(!customizeBar2)}>
+                        <button className={customizeBar2?"accordion-button":"accordion-button collapsed"} type="button">
+                        Customize Package <span className="text-lg font-medium text-dark px-2"> (Rs. {customizePrice2} )</span>
+                        </button>
+                      </h2>
+                      <div className={customizeBar2?"accordion-collapse":"accordion-collapse collapse"}>
+                        <div className="accordion-body">
+                          <div className=""> 
+                            <div className="w-full">
+                              {customizePackageList.map((el,key)=>(
+                                <div key={key} className="flex items-start justify-between mr-1">
+                                  <div className="flex items-start w-4/6">
+                                    <input type="checkbox" className="m-2 ml-0" defaultValue={key} onChange={handleChange} name="customizePackage2" ref={register} />
+                                    <div>
+                                      <div className="text-lg font-medium mx-2">{el.value} </div>
+                                      {el.sub.map((e,k)=>(
+                                        <div className="px-2" key={k}>{e}</div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                  <div>Rs. {el.price} </div>
+                                </div>
+                              ))} 
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <div>Rs. {el.price} </div>
                     </div>
-                  ))} 
+                  </div>
                 </div>
-              </div> */}
-            </div>
+
+              </div>
+            </>:<></>}
+
+            {category2===""?<></>:<>
+              <div>
+                <div className="accordion my-2" id="accordionExample">
+                  <div className="accordion-item">
+                    <h2 className="accordion-header" onClick={e=>setAddonbar2(!addonbar2)}>
+                      <button className={addonbar2?"accordion-button":"accordion-button collapsed"} type="button">
+                      Add-on Tests <span className="text-lg font-medium text-dark px-2"> (Rs. {addonPrice2})</span>
+                      </button>
+                    </h2>
+                    <div className={addonbar2?"accordion-collapse":"accordion-collapse collapse"}>
+                      <div className="accordion-body">
+                        <div className=""> 
+                          <div className="w-full">
+                            {addons.map((el,key)=>(
+                              <div key={key} className="flex items-start justify-between mr-1">
+                                <div className="flex items-start w-4/6">
+                                  <input type="checkbox" className="m-2 ml-0" defaultValue={key} onChange={handleChange} name="addons2" ref={register} />
+                                  <div>
+                                    <div className="text-lg font-medium mx-2">{el.value} </div>
+                                  </div>
+                                </div>
+                                <div>Rs. {el.price} </div>
+                              </div>
+                            ))} 
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </>}
+
+
           </div> 
         </>:<></>}
 
         <hr className="my-3" />
-        <div className="flex items-center justify-between my-2">
-          <div className="text-lg font-medium">Home Collection charge</div>
-          <div className="text-lg font-medium"> Rs. {hcc} </div>
-        </div>
+        {charge?<>
+          <div className="flex items-center justify-between my-2">
+            <div className="text-lg font-medium">Home Collection charge</div>
+            <div className="text-lg font-medium"> Rs. {hcc} </div>
+          </div> 
+        </>:<></>}
+        {/* {customizePrice1 > 2000 ?<>
+          <div className="flex items-center justify-between my-2">
+            <div className="text-lg font-medium">Employee offer for customize package ( Rs. 2000 Off ) </div>
+            <div className="text-lg font-medium"> Rs. {customizePrice1} - 2000 </div>
+          </div>
+          <div className="flex items-center justify-between my-2">
+            <div className="text-lg font-medium"> </div>
+            <div className="text-lg font-medium"> Rs. {customizePrice1 - 2000 }</div>
+          </div>
+        </>:<></>} */}
         <div className="flex items-center justify-between my-2">
           <div className="text-lg font-medium">Total  </div>
-          <div className="text-lg font-medium"> Rs. {totalPrice1 + totalPrice2 + hcc} </div>
+          <div className="text-lg font-medium"> Rs. {totalPrice1 + totalPrice2 + (charge ? hcc : 0)} </div>
         </div>
 
         <div className="col-md-12">

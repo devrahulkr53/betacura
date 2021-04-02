@@ -57,10 +57,10 @@ export default function EmployeeDetails(props){
 
           {idproof?<>
             <div className="col-md-4">
-              <div className="py-2 text-dark font-medium">{idproof}*</div>
+              <div className="py-2 text-dark font-medium">identificationDocUrl *</div>
               <input type="file"  accept="image/*,.pdf" name="idproof" ref={register({required:true})} 
-              className="border p-2 w-full" placeholder={idproof} />
-              {errors.idproof && <small className="text-danger">{idproof} is required</small>}
+              className="border p-2 w-full" placeholder="identificationDocUrl" />
+              {errors.idproof && <small className="text-danger">identificationDocUrl is required</small>}
             </div>
           </>:<></>}
           
@@ -115,7 +115,7 @@ export default function EmployeeDetails(props){
           <div className="col-md-4">
             <div className="py-2 text-dark font-medium">Age *</div>
             <input type="number" name="age" ref={register({required:true})} 
-            className="border p-2 w-full" placeholder="Your Full Name" />
+            className="border p-2 w-full" placeholder="Enter your age" />
             {errors.age && <small className="text-danger">Age is required</small>}
           </div>
           <div className="col-md-4">
