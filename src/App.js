@@ -32,6 +32,26 @@ function App() {
     // localStorage.setItem('userInfo',JSON.stringify({title:"Mr.",firstName:"ABC",email:"abc12abc@gmail.com",uid:"10009210902"}))
   },[])
 
+  // const blobToUint8Array = (b) => {
+  //   var uri = URL.createObjectURL(b),
+  //       xhr = new XMLHttpRequest(),
+  //       i,
+  //       ui8;
+
+  //   xhr.open('GET', uri, false);
+  //   xhr.send();
+
+  //   URL.revokeObjectURL(uri);
+
+  //   ui8 = new Uint8Array(xhr.response.length);
+
+  //   for (i = 0; i < xhr.response.length; ++i) {
+  //       ui8[i] = xhr.response.charCodeAt(i);
+  //   }
+
+  //   return ui8;
+  // } 
+
   const onSubmit = () => {
     var totalPrice = 0;
     for(var i in values.packageDetails){
@@ -72,25 +92,7 @@ function App() {
     console.log(data)
     setStep(step+1)
 
-    function blobToUint8Array(b) {
-      var uri = URL.createObjectURL(b),
-          xhr = new XMLHttpRequest(),
-          i,
-          ui8;
-  
-      xhr.open('GET', uri, false);
-      xhr.send();
-  
-      URL.revokeObjectURL(uri);
-  
-      ui8 = new Uint8Array(xhr.response.length);
-  
-      for (i = 0; i < xhr.response.length; ++i) {
-          ui8[i] = xhr.response.charCodeAt(i);
-      }
-  
-      return ui8;
-    } 
+    
     var formData = new FormData();
     formData.append("type","BCuraLead")
     formData.append("file",URL.createObjectURL(values.employeeDetails[0].idproof[0]))
