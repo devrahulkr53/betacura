@@ -27,7 +27,7 @@ export default function PaymentDetails (props) {
       total += employeePrice + addonPrice1 + (values.charge ? hcc : 0);
     }
     setTotalPrice(total)
-  },[])
+  },[values, family, addonPrice1, addonPrice2, employeePrice, pkgPrice2])
 
   return (
     <>
@@ -189,11 +189,11 @@ export default function PaymentDetails (props) {
           <div className="fond-bold display-6">
             Total Rs. {totalPrice}
           </div>
-          <div><a className="text-primary cursor-pointer">Pay online here</a></div>
+          <div><span className="text-primary cursor-pointer">Pay online here</span></div>
         </div>
         <div>
           <div className="fond-bold display-6">Pay by</div>
-          <div><a className="text-primary cursor-pointer" onClick={props.submit}>Cash</a></div>
+          <div><span className="text-primary cursor-pointer" onClick={props.submit}>Cash</span></div>
         </div>
       </div>
     </>

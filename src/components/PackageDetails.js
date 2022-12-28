@@ -74,7 +74,7 @@ export default function PackageDetails(props){
 
   useEffect(()=>{
     handleChange() 
-  },[])
+  })
   
   const handleChange = () => {
     const selPkg1 = getValues("package1")?getValues("package1"):""
