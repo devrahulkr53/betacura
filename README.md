@@ -1,7 +1,8 @@
-# Getting Started with Create React App
+# Betacura - Medial Assistance [ Create React App ]
 
+Project Url: https://betacura-f03858.netlify.app/  \
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
+![WhatsApp Image 2022-12-28 at 8 50 00 AM](https://user-images.githubusercontent.com/58592540/209755955-866eff04-e527-4166-98ce-0299d5caa68c.jpeg)
 ## Available Scripts
 
 In the project directory, you can run:
