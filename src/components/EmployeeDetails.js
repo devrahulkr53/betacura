@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { useForm } from "react-hook-form";
 
 export default function EmployeeDetails(props){
     const { values, setValues, handleStep, family, setFamily } = props
-    const { register, handleSubmit, watch, errors } = useForm({
+    const { register, handleSubmit, errors } = useForm({
       defaultValues:{
         name1:values.employeeDetails[0]?.name,
         id:values.employeeDetails[0]?.id,

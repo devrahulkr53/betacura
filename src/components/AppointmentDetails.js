@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { useForm } from "react-hook-form";
 
 export default function AppointmentDetails(props){
@@ -7,8 +7,8 @@ export default function AppointmentDetails(props){
   var date2 = new Date();
   date2.setDate(date2.getDate() + 3);
  
-  const { values, setValues, handleStep, family, setFamily } = props
-  const { register, getValues, setValue, handleSubmit, watch, errors } = useForm({
+  const { values, setValues, handleStep, family } = props
+  const { register, getValues, setValue, handleSubmit, errors } = useForm({
     defaultValues:{
       street1:values.appointmentDetails[0]?.address,
       locality1:values.appointmentDetails[0]?.locality,

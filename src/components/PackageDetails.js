@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from "react-hook-form";
 import { addons, customizePackageList } from "./globalVar"
 
@@ -25,12 +25,11 @@ export default function PackageDetails(props){
     {name:"Customize Package",price:customizePrice2,count:0,data:[]}
   ]
   
-  const { values, setValues, handleStep, family, setFamily } = props
+  const { values, setValues, handleStep, family } = props
   const [addonPrice1,setAddonPrice1] = React.useState(0);
   const [addonPrice2,setAddonPrice2] = React.useState(0);
   const [totalPrice1,setPrice1] = React.useState(0);
   const [totalPrice2,setPrice2] = React.useState(0);
-  const [totalPrice,setPrice] = React.useState(0);
   const [addonbar1,setAddonbar1] = React.useState(false);
   const [addonbar2,setAddonbar2] = React.useState(false);
   const [customizeBar1,setCustomizeBar1] = React.useState(false);
@@ -38,14 +37,14 @@ export default function PackageDetails(props){
   const [category1,setCategory1] = React.useState(values.packageDetails[0]?values.packageDetails[0].category:"")
   const [category2,setCategory2] = React.useState(values.packageDetails[1]?values.packageDetails[1].category:"")
   const [selectedPackage1,setSelectedPackage1] = React.useState(String(packageList.findIndex(e=>(
-    e.name==values.packageDetails[0]?.packageName
+    e.name===values.packageDetails[0]?.packageName
   ))) === "-1"?"":String(packageList.findIndex(e=>(
-    e.name==values.packageDetails[0]?.packageName
+    e.name===values.packageDetails[0]?.packageName
   ))))
   const [selectedPackage2,setSelectedPackage2] = React.useState(String(packageList.findIndex(e=>(
-    e.name==values.packageDetails[1]?.packageName
+    e.name===values.packageDetails[1]?.packageName
   ))) === "-1"?"":String(packageList.findIndex(e=>(
-    e.name==values.packageDetails[1]?.packageName
+    e.name===values.packageDetails[1]?.packageName
   ))))
 
   const hcc = 250;
@@ -53,17 +52,17 @@ export default function PackageDetails(props){
    
   const [charge,setCharge] = React.useState(false);
   
-  const { register, getValues, handleSubmit, watch, errors } = useForm({
+  const { register, getValues, handleSubmit } = useForm({
     defaultValues:{
       package1:String(packageList.findIndex(e=>(
-        e.name==values.packageDetails[0]?.packageName
+        e.name===values.packageDetails[0]?.packageName
       ))) === "-1"?"":String(packageList.findIndex(e=>(
-        e.name==values.packageDetails[0]?.packageName
+        e.name===values.packageDetails[0]?.packageName
       ))),
       package2:String(packageList.findIndex(e=>(
-        e.name==values.packageDetails[1]?.packageName
+        e.name===values.packageDetails[1]?.packageName
       ))) === "-1"?"":String(packageList.findIndex(e=>(
-        e.name==values.packageDetails[1]?.packageName
+        e.name===values.packageDetails[1]?.packageName
       ))),
       addons1:values.packageDetails[0]?.addonsArray,
       addons2:values.packageDetails[1]?.addonsArray,
@@ -87,9 +86,11 @@ export default function PackageDetails(props){
     var price1 = 0, price2 = 0;
     addons1?.map(el=>{
       price1 += addons[Number(el)].price
+      return el
     })
     customizePackage1?.map(el=>{
       price2 += customizePackageList[Number(el)].price
+      return el
     })
     setAddonPrice1(price1)
     setCustomizePrice1(price2)
@@ -106,9 +107,11 @@ export default function PackageDetails(props){
       var pkgprice = packageList[selPkg2]?packageList[selPkg2].price:0;
       addons2?.map(el=>{
         price3 += addons[Number(el)].price
+        return el
       })
       customizePackage2?.map(el=>{
         price4 += customizePackageList[Number(el)].price
+        return el
       })
       setAddonPrice2(price3)
       setCustomizePrice2(price4)
@@ -117,9 +120,9 @@ export default function PackageDetails(props){
     }
     
     if(family){
-      setCharge((addons1?.length > 0 || addons2.length > 0) && (selPkg1 == "" && selPkg2 == ""))
+      setCharge((addons1?.length > 0 || addons2.length > 0) && (selPkg1 === "" && selPkg2 === ""))
     }else{
-      setCharge((addons1?.length > 0) && (selPkg1 == ""))
+      setCharge((addons1?.length > 0) && (selPkg1 === ""))
     }
 
   } 

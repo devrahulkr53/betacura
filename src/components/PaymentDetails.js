@@ -1,9 +1,8 @@
-import React, { Component,useEffect,useState } from 'react'
+import React, { useEffect } from 'react'
 
 export default function PaymentDetails (props) {
 
-  const { values, setValues, handleStep, family, setFamily } = props
-  const [addonbar1,setAddonbar1] = React.useState(false);
+  const { values, family } = props
   const [totalPrice,setTotalPrice] = React.useState(0)
 
   const customized1 = values.packageDetails[0]?.customized;

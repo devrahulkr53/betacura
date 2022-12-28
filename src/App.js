@@ -130,7 +130,7 @@ function App() {
   return (
   <div className="bg-light">
     <div className="container">  
-      <img src={logo} className="w-3/5 md:w-1/5 mx-auto" />
+      <img src={logo} alt="" className="w-3/5 md:w-1/5 mx-auto" />
  
 
       <div className="container-fluid">
@@ -151,7 +151,7 @@ function App() {
                 <div className="text-sm md:text-xl px-3 font-medium w-full">
                   <div className="flex items-center">
                     <div>Employee Details</div>  
-                    <img src={check} width="20px" className="mx-3" />
+                    <img src={check} width="20px" alt="" className="mx-3" />
                   </div> 
                   <div className="text-md text-secondary">{values.employeeDetails[0].name} +91{values.employeeDetails[0].phone}</div> 
                   {family?<>
@@ -191,7 +191,7 @@ function App() {
                 <div className="text-sm md:text-xl px-3 font-medium w-full">
                   <div className="flex items-center">
                     <div>Package Details</div>  
-                    <img src={check} width="20px" className="mx-3" />
+                    <img src={check} alt="" width="20px" className="mx-3" />
                   </div> 
                   {values.employeeDetails.length > 1?<>
                     {values.packageDetails.map((el,key)=>(
@@ -240,7 +240,7 @@ function App() {
                 <div className="text-sm md:text-xl px-3 font-medium w-full">
                   <div className="flex items-center">
                     <div>Appointment Details</div>  
-                    <img src={check} width="20px" className="mx-3" />
+                    <img src={check} alt="" width="20px" className="mx-3" />
                   </div> 
                   {values.employeeDetails.length > 1?<>
                     {values.appointmentDetails.map((el,key)=>(
